@@ -6,7 +6,7 @@ shards:
 
   db:
     github: crystal-lang/crystal-db
-    version: 0.5.0
+    version: 0.7.0
 
   discordcr:
     github: greenbigfrog/discordcr
@@ -14,5 +14,5 @@ shards:
 
   pg:
     github: greenbigfrog/crystal-pg
-    commit: 5a01c3e38be055df648e5744b3c03a8d7d4d57bc
+    commit: 764797e80675906c05ca7a0b02c2839f6dbb4522
 
