@@ -9,8 +9,8 @@ shards:
     version: 0.7.0
 
   discordcr:
-    github: greenbigfrog/discordcr
-    commit: d63b0d51ddba27b6342acad8364e656073c3bdde
+    github: incognitojam/discordcr
+    commit: 10b5b946337c6d8c9f2e057b045587e53afbacc4
 
   pg:
     github: greenbigfrog/crystal-pg

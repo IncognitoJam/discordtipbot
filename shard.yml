@@ -17,7 +17,7 @@ dependencies:
     github: greenbigfrog/crystal-pg
     branch: add-bigdecimal
   discordcr:
-    github: greenbigfrog/discordcr
+    github: incognitojam/discordcr
     branch: type-fix
   bitcoin_rpc:
     github: greenbigfrog/bitcoin_rpc
