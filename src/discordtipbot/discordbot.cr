@@ -74,8 +74,6 @@ class DiscordBot
         self.active(msg)
       when .starts_with? "support"
         self.support(msg)
-      when .starts_with? "github"
-        self.github(msg)
       when .starts_with? "invite"
         self.invite(msg)
       when .starts_with? "uptime"
@@ -242,7 +240,7 @@ class DiscordBot
     @tip.add_server(guild.id.to_u64)
 
     unless @tip.get_config(guild.id.to_u64, "contacted")
-      string = "Hey! Someone just added me to your guild (#{guild.name}). By default, raining and soaking are disabled. Configure the bot using `#{@config.prefix}config [rain/soak/mention] [on/off]`. If you have any further questions, please join the support guild at http://tipbot.gbf.re"
+      string = "Hey! Someone just added me to your guild (#{guild.name}). By default, raining and soaking are disabled. Configure the bot using `#{@config.prefix}config [rain/soak/mention] [on/off]`. If you have any further questions, please join the support guild at https://discord.gg/hySHmpH"
       begin
         contact = @bot.create_message(@cache.resolve_dm_channel(guild.owner_id), string)
       rescue
@@ -347,7 +345,7 @@ class DiscordBot
   end
 
   def help(msg : Discord::Message)
-    cmds = {"ping", "uptime", "tip", "soak", "rain", "active", "balance", "terms", "withdraw", "deposit", "support", "github", "invite"}
+    cmds = {"ping", "uptime", "tip", "soak", "rain", "active", "balance", "terms", "withdraw", "deposit", "support", "invite"}
     string = String.build do |str|
       cmds.each { |x| str << "`" + @config.prefix + x + "`, " }
     end
@@ -477,7 +475,7 @@ class DiscordBot
     begin
       address = @tip.get_address(msg.author.id.to_u64)
       embed = Discord::Embed.new(
-        footer: Discord::EmbedFooter.new("I love you! ❤"),
+        footer: Discord::EmbedFooter.new("Single use address"),
         image: Discord::EmbedImage.new("https://chart.googleapis.com/chart?cht=qr&chs=300x300&chld=L%7C1&chl=#{@config.uri_scheme}:#{address}")
       )
       @bot.create_message(@cache.resolve_dm_channel(msg.author.id.to_u64), "Your deposit address is: **#{address}**\nPlease keep in mind, that this address is for **one time use only**. After every deposit your address will reset! Don't use this address to receive from faucets, pools, etc.\nDeposits take **#{@config.confirmations} confirmations** to get credited!\n*#{TERMS}*", embed)
@@ -731,11 +729,7 @@ class DiscordBot
   end
 
   def support(msg : Discord::Message)
-    reply(msg, "For support please visit <http://tipbot.gbf.re>")
-  end
-
-  def github(msg : Discord::Message)
-    reply(msg, "To contribute to the development of the tipbot visit <https://github.com/greenbigfrog/discordtipbot/>")
+    reply(msg, "For support please visit <https://discord.gg/hySHmpH>")
   end
 
   def uptime(msg : Discord::Message)
