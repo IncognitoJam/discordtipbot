@@ -31,6 +31,8 @@ class DiscordBot
 
       if private?(msg)
         content = @config.prefix + content unless content.match(@prefix_regex)
+      else
+        next unless guild_id(msg) == 645976140057411585
       end
 
       next unless match = content.match(@prefix_regex)
@@ -72,10 +74,6 @@ class DiscordBot
         self.admin(msg, cmd)
       when .starts_with? "active"
         self.active(msg)
-      when .starts_with? "support"
-        self.support(msg)
-      when .starts_with? "invite"
-        self.invite(msg)
       when .starts_with? "uptime"
         self.uptime(msg)
       when .starts_with? "checkconfig"
@@ -240,7 +238,7 @@ class DiscordBot
     @tip.add_server(guild.id.to_u64)
 
     unless @tip.get_config(guild.id.to_u64, "contacted")
-      string = "Hey! Someone just added me to your guild (#{guild.name}). By default, raining and soaking are disabled. Configure the bot using `#{@config.prefix}config [rain/soak/mention] [on/off]`. If you have any further questions, please join the support guild at https://discord.gg/hySHmpH"
+      string = "Hey! Someone just added me to your guild (#{guild.name}). By default, raining and soaking are disabled. Configure the bot using `#{@config.prefix}config [rain/soak/mention] [on/off]`."
       begin
         contact = @bot.create_message(@cache.resolve_dm_channel(guild.owner_id), string)
       rescue
@@ -345,7 +343,7 @@ class DiscordBot
   end
 
   def help(msg : Discord::Message)
-    cmds = {"ping", "uptime", "tip", "soak", "rain", "active", "balance", "terms", "withdraw", "deposit", "support", "invite"}
+    cmds = {"ping", "uptime", "tip", "soak", "rain", "active", "balance", "terms", "withdraw", "deposit"}
     string = String.build do |str|
       cmds.each { |x| str << "`" + @config.prefix + x + "`, " }
     end
@@ -393,7 +391,7 @@ class DiscordBot
     when "insufficient balance"
       reply(msg, "**ERROR**: Insufficient balance")
     when "error"
-      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later. If the problem persists, please contact the dev for help in #{@config.prefix}support")
+      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later.")
     end
   end
 
@@ -459,7 +457,7 @@ class DiscordBot
     when "internal address"
       reply(msg, "**ERROR**: Withdrawing to an internal address isn't permitted")
     when false
-      reply(msg, "**ERROR**: There was a problem trying to withdraw. Please try again later. If the problem persists, please contact the dev for help in #{@config.prefix}support")
+      reply(msg, "**ERROR**: There was a problem trying to withdraw. Please try again later.")
     when true
       string = String.build do |io|
         io.puts "Pending withdrawal of **#{amount} #{@config.coinname_short}** to **#{address}**. *Processing shortly*" + Emoji::Cursor
@@ -540,7 +538,7 @@ class DiscordBot
     when "insufficient balance"
       reply(msg, "**ERROR**: Insufficient balance")
     when false
-      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later. If the problem persists, please contact the dev for help in #{@config.prefix}support")
+      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later.")
     when true
       amount_each = BigDecimal.new(amount / targets.size).round(8)
 
@@ -577,7 +575,7 @@ class DiscordBot
     when "insufficient balance"
       reply(msg, "**ERROR**: Insufficient balance")
     when false
-      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later. If the problem persists, please contact the dev for help in #{@config.prefix}support")
+      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later.")
     when true
       amount_each = BigDecimal.new(amount / authors.size).round(8)
 
@@ -622,7 +620,7 @@ class DiscordBot
     when "insufficient balance"
       reply(msg, "**ERROR**: Insufficient balance")
     when "error"
-      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later. If the problem persists, please contact the dev for help in #{@config.prefix}support")
+      reply(msg, "**ERROR**: There was a problem trying to transfer funds. Please try again later.")
     end
   end
 
@@ -722,14 +720,6 @@ class DiscordBot
       bal = @tip.get_balance(cmd[2].to_u64)
       reply(msg, "**#{cmd[2]}**'s balance is: **#{bal}** #{@config.coinname_short}")
     end
-  end
-
-  def invite(msg : Discord::Message)
-    reply(msg, "You can add this bot to your own guild using following URL: <https://discordapp.com/oauth2/authorize?&client_id=#{@config.discord_client_id}&scope=bot>")
-  end
-
-  def support(msg : Discord::Message)
-    reply(msg, "For support please visit <https://discord.gg/hySHmpH>")
   end
 
   def uptime(msg : Discord::Message)
