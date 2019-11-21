@@ -32,7 +32,7 @@ class DiscordBot
       if private?(msg)
         content = @config.prefix + content unless content.match(@prefix_regex)
       else
-        next unless guild_id(msg) == 645976140057411585
+        next unless guild_id(msg) == 645976140057411585 || guild_id(msg) == 646846737599692840
       end
 
       next unless match = content.match(@prefix_regex)
